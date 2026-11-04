@@ -1,3 +1,5 @@
+
+import CommentsSection from '../components/CommentsSection';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { deleteArticle, getArticle, type Article } from '../api/articles';
@@ -56,7 +58,7 @@ export default function ArticleDetailPage() {
         </button>
       </div>
 
-      {/* Comments section will go here in a later step */}
+      <CommentsSection articleId={article.articleId} />
     </div>
   );
 }
