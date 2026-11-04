@@ -1,111 +1,871 @@
+/* =========================================================
+   Articles & Comments — modern enthusiast-forum theme
+   ========================================================= */
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  /* Surfaces */
+  --page-bg: #f2f3f5;
+  --card-bg: #ffffff;
+  --topbar-bg: #0b0b0c;
+  --band-bg: #ffffff;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  /* Lines */
+  --line: #e3e5e8;
+  --line-strong: #c8ccd2;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  /* Text */
+  --text: #1b1d21;
+  --text-muted: #5f6670;
+
+  /* Brand blue (buttons, links) */
+  --blue: #1b5a9c;
+  --blue-hover: #144a82;
+  --link: #1d4f91;
+  --link-hover: #0f3566;
+
+  /* Avatars (decorative) */
+  --avatar: #8d939b;
+  --avatar-op: #3b6fa8;
+
+  /* Danger */
+  --danger: #b42318;
+  --danger-hover: #8f1b12;
+  --danger-soft: #fdecea;
+  --danger-line: #eba49c;
+
+  /* Info / loading */
+  --info-bg: #eaf2fb;
+  --info-line: #b9cfe6;
+  --info-text: #1d4f91;
+
+  /* Keyboard focus ring */
+  --focus: #f2a900;
+
+  --radius: 8px;
+  --radius-sm: 6px;
+  --gutter: 72px; /* avatar column width + gap */
+
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+
+  font: 15px/1.6 var(--sans);
   color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
+  background: var(--page-bg);
+  color-scheme: light;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background: var(--page-bg);
+}
+
+#root {
+  position: relative; /* lets the search box sit inside the top bar */
+  width: 1100px;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
+h2,
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+h1,
+h2 {
+  font-family: var(--sans);
+  overflow-wrap: anywhere;
 }
 
-code {
+/* Full-width background band behind an element that lives in the centered column */
+#root > header,
+.page-header,
+.page:has(> .back-link)::before,
+.page > .back-link,
+.page > h1 {
+  border-image: conic-gradient(var(--band-bg) 0 0) fill 0 / / 0 100vmax;
+}
+
+/* White spacer above the back link so the title band starts under the top bar */
+.page:has(> .back-link)::before {
+  content: '';
+  display: block;
+  height: 16px;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+/* ---------- Keyboard focus (all interactive elements) ---------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Top bar ---------- */
+
+#root > header {
+  --band-bg: var(--topbar-bg);
+  display: flex;
+  align-items: center;
+  min-height: 64px;
+  padding: 0 16px;
+}
+
+/* Logo-style site title: [diy] single page article */
+#root > header a {
+  display: inline-block; /* real spaces between the words, same as inside "single page" */
+  color: #ffffff;
+  font-size: 28px;
+  line-height: 1;
+  letter-spacing: -1px;
+  min-width: 340px; /* reserves room so the search box never overlaps the logo */
+  white-space: nowrap;
+}
+
+#root > header a:hover {
+  text-decoration: none;
+}
+
+/* "diy" — white on a blue box */
+#root > header a span:nth-child(1) {
+  padding: 4px 6px 7px;
+  margin-right: 2px;
+  color: #ffffff;
+  font-weight: 700;
+  background: #3f68b4;
+}
+
+/* "single page" — bold red */
+#root > header a span:nth-child(2) {
+  color: #d42a2a;
+  font-weight: 700;
+}
+
+/* "article" — light white */
+#root > header a span:nth-child(3) {
+  color: #e8e8e8;
+  font-weight: 300;
+}
+
+#root > header a:hover span:nth-child(1) {
+  background: #4d78c6;
+}
+
+#root > header a:hover span:nth-child(2) {
+  color: #ec3b3b;
+}
+
+#root > header a:hover span:nth-child(3) {
+  color: #ffffff;
+}
+
+@media (max-width: 480px) {
+  #root > header a {
+    font-size: 20px;
+  }
+}
+
+/* ---------- Footer ---------- */
+
+#root > footer {
+  margin-top: auto; /* stays at the bottom even on short pages */
+  padding: 16px;
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  border-top: 1px solid var(--line);
+}
+
+#root > footer a {
+  color: var(--link);
+}
+
+/* ---------- Page container ---------- */
+
+.page {
+  flex: 1;
+  padding: 0 16px 48px;
+}
+
+/* ---------- Title area (white band under the top bar) ---------- */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 0;
+  margin-bottom: 24px;
+}
+
+.page-header h1,
+.page > h1 {
+  color: var(--text);
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.page > .back-link {
+  display: block;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.page > h1 {
+  padding: 8px 0 24px;
+  margin-bottom: 24px;
+}
+
+/* Plain "Back to list" link on the error view */
+.page > a:not([class]) {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+/* ---------- Buttons ---------- */
+
+/* Secondary (outlined) — default */
+button,
+.form-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  font: 600 14px/1.4 var(--sans);
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:hover,
+.form-actions a:hover {
+  color: var(--text);
+  background: #f3f4f6;
+  border-color: #9aa1aa;
+  text-decoration: none;
+}
+
+/* Primary (solid blue) — submit buttons and "+ New Article" */
+button[type='submit'],
+.page-header button {
+  color: #ffffff;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+button[type='submit']:hover,
+.page-header button:hover {
+  color: #ffffff;
+  background: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+
+button:disabled,
+button:disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Ghost buttons in post action rows (like Reply / Quote / Like) */
+.article-body + .form-actions button,
+.comment-list li > .form-actions button {
+  padding: 6px 12px;
+  color: #33373d;
+  background: transparent;
+  border-color: transparent;
+}
+
+.article-body + .form-actions button:hover,
+.comment-list li > .form-actions button:hover {
+  color: var(--text);
+  background: #eef0f3;
+  border-color: transparent;
+}
+
+/* Dangerous actions — always red, wherever they appear */
+button.danger,
+.article-body + .form-actions button.danger,
+.comment-list li > .form-actions button.danger {
+  color: var(--danger);
+  background: var(--card-bg);
+  border-color: var(--danger-line);
+}
+
+button.danger:hover,
+.article-body + .form-actions button.danger:hover,
+.comment-list li > .form-actions button.danger:hover {
+  color: #ffffff;
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+/* ---------- Inputs ---------- */
+
+input,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  font: 15px/1.5 var(--sans);
+  color: var(--text);
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+}
+
+input:hover,
+textarea:hover {
+  border-color: #9aa1aa;
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  border-color: var(--blue);
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* Search box: lifted into the black top bar, next to the logo */
+.search {
+  position: absolute;
+  top: 13px;
+  left: 380px;
+  width: 380px;
+  height: 38px;
+  padding: 0 40px 0 14px;
+  color: #ffffff;
+  background-color: #2a2b2e;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d0d3d8' stroke-width='2.5' stroke-linecap='round'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5'/%3E%3Cpath d='m20 20-4.8-4.8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px;
+  border: 1px solid #2a2b2e;
+  border-radius: 4px;
+}
+
+.search::placeholder {
+  color: #a4a8ae;
+}
+
+.search:hover {
+  background-color: #34363a;
+  border-color: #4a4d52;
+}
+
+.search:focus-visible {
+  background-color: #34363a;
+  border-color: #8a8f96;
+}
+
+/* Narrow screens: not enough room in the top bar, so put it back above the list */
+@media (max-width: 800px) {
+  .search {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 9px 40px 9px 12px;
+    margin-bottom: 16px;
+    color: var(--text);
+    background-color: #ffffff;
+    border-color: var(--line-strong);
+    border-radius: var(--radius-sm);
+  }
+
+  .search::placeholder {
+    color: #767c84;
+  }
+
+  .search:hover,
+  .search:focus-visible {
+    background-color: #ffffff;
+  }
+
+  .search:hover {
+    border-color: #9aa1aa;
+  }
+
+  .search:focus-visible {
+    border-color: var(--blue);
+  }
+}
+
+/* ---------- Status messages ---------- */
+
+.error {
+  margin: 16px 0;
+  padding: 10px 14px;
+  color: var(--danger-hover);
+  font-weight: 600;
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-line);
+  border-left: 4px solid var(--danger);
+  border-radius: var(--radius-sm);
+}
+
+.page > .error:first-child {
+  margin-top: 24px;
+}
+
+.empty {
+  margin: 16px 0;
+  padding: 24px 16px;
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+}
+
+/* Loading messages (list page, comments, and bare "Loading…" pages) */
+.page > p:not([class]),
+.comments > p:not([class]),
+.page:not(:has(*)) {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: var(--info-text);
+  font-style: italic;
+  background: var(--info-bg);
+  border: 1px solid var(--info-line);
+  border-radius: var(--radius-sm);
+}
+
+.page > p:not([class]) {
+  margin: 16px 0;
+}
+
+.page:not(:has(*)) {
+  flex: 0 0 auto;
+  margin: 24px 16px;
+}
+
+.page > p:not([class])::before,
+.comments > p:not([class])::before,
+.page:not(:has(*))::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 2px solid var(--info-line);
+  border-top-color: var(--info-text);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page > p:not([class])::before,
+  .comments > p:not([class])::before,
+  .page:not(:has(*))::before {
+    animation: none;
+  }
+}
+
+/* ---------- Thread list (articles) — one card per thread ---------- */
+
+.article-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-list:empty {
+  display: none;
+}
+
+.article-list a {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  column-gap: 16px;
+  align-items: center;
+  padding: 14px 16px;
+  color: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.article-list a:hover {
+  color: var(--text);
+  border-color: var(--line-strong);
+  box-shadow: 0 2px 8px rgba(20, 30, 45, 0.08);
+  text-decoration: none;
+}
+
+/* Decorative avatar square — color rotates per row */
+.article-list a::before {
+  content: '';
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: 60px;
+  height: 60px;
+  background: var(--row-avatar, var(--avatar));
+  border-radius: var(--radius-sm);
+}
+
+/* Avatar color is picked from the article id (articleId % 6),
+   so an article has the same color in the list and on its own page */
+[data-color='0'] { --row-avatar: #2f9e44; }
+[data-color='1'] { --row-avatar: #c08497; }
+[data-color='2'] { --row-avatar: #d9534f; }
+[data-color='3'] { --row-avatar: #8b7fd6; }
+[data-color='4'] { --row-avatar: #6b1d3a; }
+[data-color='5'] { --row-avatar: #3b6fa8; }
+
+.article-list h2 {
+  grid-column: 2;
+  color: var(--link);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.article-list a:hover h2 {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+.article-list p {
+  grid-column: 2;
+  margin-top: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .article-list a {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .article-list a::before {
+    width: 44px;
+    height: 44px;
+  }
+
+  .article-list h2 {
+    font-size: 18px;
+  }
+}
+
+/* ---------- Thread view: original post ---------- */
+
+.article-body {
+  position: relative;
+  margin-left: var(--gutter);
+  padding: 46px 24px 20px; /* extra top room for the OP tag */
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* Small "OP" (original poster) tag in the top-left corner of the post */
+.article-body::after {
+  content: 'OP';
+  content: 'OP' / 'Original post';
+  position: absolute;
+  top: 14px;
+  left: 24px;
+  padding: 1px 7px;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.3px;
+  background: #eef1f5;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+
+/* OP avatar sits in the left column */
+.article-body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--gutter));
+  width: 56px;
+  height: 56px;
+  background: var(--row-avatar, var(--avatar-op));
+  border-radius: var(--radius);
+}
+
+.article-body p {
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Action rows ---------- */
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Footer of the original post card */
+.article-body:has(+ .form-actions) {
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.article-body + .form-actions {
+  margin-left: var(--gutter);
+  padding: 8px 16px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.article-body + .form-actions::before {
+  content: '';
+  flex-basis: 100%;
+  height: 1px;
+  margin-bottom: 4px;
+  background: var(--line);
+}
+
+/* ---------- New thread / edit forms ---------- */
+
+.article-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.article-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.article-form .form-actions {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+/* ---------- Replies (comments) ---------- */
+
+.comments {
+  margin-top: 32px;
+}
+
+.comments h2 {
+  margin-bottom: 16px;
+  color: var(--text);
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.comments > p,
+.comments > .comment-form {
+  margin-left: var(--gutter);
+}
+
+.comments > p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.comment-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.comment-list:empty {
+  display: none;
+}
+
+.comment-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  column-gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Reply avatar */
+.comment-list li::before {
+  content: '';
+  grid-row: 1 / span 2;
+  width: 56px;
+  height: 56px;
+  background: var(--avatar);
+  border-radius: var(--radius);
+}
+
+/* Reply card: body (top) + action row (bottom) */
+.comment-list li > p {
+  grid-column: 2;
+  padding: 18px 24px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: var(--radius) var(--radius) 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.comment-list li > .form-actions {
+  grid-column: 2;
+  padding: 8px 16px 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+}
+
+.comment-list li > .form-actions::before {
+  content: '';
+  flex-basis: 100%;
+  height: 1px;
+  margin-bottom: 4px;
+  background: var(--line);
+}
+
+/* Reply box (bottom) and inline edit box —
+   the textarea is the white "editor" card, buttons sit below it on the right */
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.comment-form > .error,
+.comment-form > textarea {
+  align-self: stretch;
+}
+
+.comment-form > .error {
+  margin: 0;
+}
+
+.comment-form textarea {
+  min-height: 140px;
+  padding: 16px 20px;
+  font-size: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.comment-form textarea::placeholder {
+  color: #8a8f96;
+}
+
+.comment-form textarea:hover {
+  border-color: var(--line-strong);
+}
+
+.comment-form textarea:focus-visible {
+  border-color: var(--blue);
+}
+
+/* Bigger, rounder buttons under the editor */
+.comment-form button {
+  padding: 9px 20px;
   font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+  border-radius: var(--radius);
+}
+
+/* Secondary button (Cancel) — light gray, like "Preview" */
+.comment-form button[type='button'] {
+  background: #f4f5f6;
+  border-color: var(--line-strong);
+}
+
+.comment-form button[type='button']:hover {
+  background: #e9ebee;
+  border-color: #9aa1aa;
+}
+
+.comment-form .form-actions {
+  gap: 10px;
+}
+
+.comment-list li > .comment-form {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+
+/* ---------- Small screens: drop the avatar column ---------- */
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 0px;
+  }
+
+  .article-body::before,
+  .comment-list li::before {
+    display: none;
+  }
+
+  .comment-list li {
+    grid-template-columns: 1fr;
+  }
+
+  .comment-list li > p,
+  .comment-list li > .form-actions,
+  .comment-list li > .comment-form {
+    grid-column: 1;
+  }
+
+  .page-header {
+    flex-wrap: wrap;
+  }
 }

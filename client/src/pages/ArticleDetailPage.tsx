@@ -45,7 +45,7 @@ export default function ArticleDetailPage() {
     <div className="page">
       <Link to="/" className="back-link">← Back to list</Link>
       <h1>{article.title}</h1>
-      <div className="article-body">
+      <div className="article-body" data-color={article.articleId % 6}>
         <p>{article.contents}</p>
       </div>
 

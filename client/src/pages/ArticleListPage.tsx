@@ -48,7 +48,7 @@ export default function ArticleListPage() {
 
       <ul className="article-list">
         {articles.map((a) => (
-          <li key={a.articleId}>
+          <li key={a.articleId} data-color={a.articleId % 6}>
             <Link to={`/articles/${a.articleId}`}>
               <h2>{a.title}</h2>
               <p>{preview(a.contents)}</p>
