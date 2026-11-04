@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import {
   createComment,
+  deleteComment,
   getComments,
   updateComment,
   type Comment,
@@ -87,6 +88,16 @@ export default function CommentsSection({ articleId }: { articleId: number }) {
     }
   }
 
+    async function handleDelete(commentId: number) {
+    try {
+     await deleteComment(articleId, commentId);
+      // Keep every comment except the one we deleted
+    setComments(comments.filter((c) => c.commentId !== commentId));
+    } catch {
+      setError('Failed to delete comment.');
+    }
+  }
+
   return (
     <section className="comments">
       <h2>Comments</h2>
@@ -121,8 +132,11 @@ export default function CommentsSection({ articleId }: { articleId: number }) {
               // Normal read view
               <>
                 <p>{c.body}</p>
-                <div className="form-actions">
+             <div className="form-actions">
                   <button onClick={() => startEdit(c)}>Edit</button>
+                  <button className="danger" onClick={() => handleDelete(c.commentId)}>
+                    Delete
+                  </button>
                 </div>
               </>
             )}
