@@ -1,3 +1,66 @@
+import { useState, type FormEvent } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { createArticle } from '../api/articles';
+
 export default function NewArticlePage() {
-  return <h1>New Article</h1>;
+  const [title, setTitle] = useState('');
+  const [contents, setContents] = useState('');
+  const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault(); // stop the browser from reloading the page
+
+    // Validation: don't allow blank fields
+    if (!title.trim() || !contents.trim()) {
+      setError('Title and contents are both required.');
+      return;
+    }
+
+    setError('');
+    setSubmitting(true);
+    try {
+      const article = await createArticle({ title, contents });
+      navigate(`/articles/${article.articleId}`); // go to the new article
+    } catch {
+      setError('Failed to create article. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="page">
+      <Link to="/" className="back-link">← Back to list</Link>
+      <h1>New Article</h1>
+
+      {error && <p className="error">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="article-form">
+        <label>
+          Title
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </label>
+        <label>
+          Contents
+          <textarea
+            value={contents}
+            onChange={(e) => setContents(e.target.value)}
+            rows={8}
+          />
+        </label>
+        <div className="form-actions">
+          <button type="submit" disabled={submitting}>
+            {submitting ? 'Creating…' : 'Create Article'}
+          </button>
+          <Link to="/">Cancel</Link>
+        </div>
+      </form>
+    </div>
+  );
 }
